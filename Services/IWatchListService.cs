@@ -6,5 +6,6 @@ namespace StockAppApi.Services
     {
         Task AddtoWatchList(int Userid, int Stockid);
         Task<WatchList?> GetWatchList(int Userid, int Stockid);
+        Task<List<Stock?>?> GetWatchListByUserId(int userId);
     }
 }

@@ -55,5 +55,32 @@ namespace StockAppApi.Controllers
             await _watchListService.AddtoWatchList(userId,StockId);
             return Ok();
         }
+        [HttpGet("GetWatchListByUserId")]
+        [JwtAuthorize]
+        public async Task<IActionResult> GetWatchListByUserId()
+        {
+            int userid = HttpContext.GetUserId();
+            var user = await _userService.GetByID(userid);
+            if (user == null)
+            {
+                return NotFound("user not found.");
+            }
+            var stocks = await _watchListService.GetWatchListByUserId( userid);
+            return Ok(stocks);
+        }
+
+        [HttpGet("GetWatchList/{stockId}")]
+        [JwtAuthorize]
+        public async Task<IActionResult> GetWatchList(int StockId)
+        {
+            int userId = HttpContext.GetUserId();
+            var user = await _userService.GetByID(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+            var stocks = await _watchListService.GetWatchList(userId, StockId);
+            return Ok(stocks);
+        }
     }
 }

@@ -17,10 +17,22 @@ builder.Services.AddDbContext<StockAppContext>(options =>
                 options.UseSqlServer(settings["DefaultConnection"]));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<IWatchListRepository, WatchListRepository>();
 builder.Services.AddScoped<IWatchListService, WatchListService>();
+
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IStockService, StockService>();
+
+builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
+builder.Services.AddScoped<IQuoteService, QuoteService>();
+
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+builder.Services.AddScoped<ICoveredWarrantsRepository, CoveredWarrantsRepository>();
+builder.Services.AddScoped<ICoveredWarrantsService, CoveredWarrantsService>();
+
 builder.Services.AddScoped<JwtAuthorizeFilter>();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(option =>
@@ -55,7 +67,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+var webSocketOptions = new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2)
+};
+webSocketOptions.AllowedOrigins.Add("*");
+//app.UseMiddleware<WebSocketMiddleware>();
+app.UseWebSockets(webSocketOptions);
 app.UseAuthentication();
 app.UseAuthorization();
 
